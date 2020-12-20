@@ -1,0 +1,59 @@
+#-------------mysql---------------
+#download image
+docker search mysql
+docker pull mysql:latest
+docker images
+
+#run docker container
+docker run -itd --name mysql_format -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 mysql
+
+#login docker
+docker exec -it mysql_format /bin/bash
+#mysql client
+mysql -u root -p
+
+#destory
+docker stop container_id
+docker rm -f container_id
+
+
+#-------------redis---------------
+docker search  redis
+docker images
+docker run -itd --name redis-test -p 6379:6379 redis
+docker exec -it redis-test /bin/bash
+
+
+#-------------kafka---------------
+docker pull wurstmeister/zookeeper
+docker pull wurstmeister/kafka
+
+#start container
+#zk
+docker run -d --name zookeeper -p 2181:2181 -v /etc/localtime:/etc/localtime wurstmeister/zookeeper
+#kafka
+docker run  -d --name kafka -p 9092:9092  --env KAFKA_ADVERTISED_HOST_NAME=192.168.1.13 -e KAFKA_ZOOKEEPER_CONNECT=192.168.1.13:2181 -e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://192.168.1.13:9092  -e KAFKA_LISTENERS=PLAINTEXT://0.0.0.0:9092 wurstmeister/kafka
+
+#stop container
+docker ps -a | grep wurstmeister | awk -F " " '{print $1}' | xargs docker stop 
+docker ps -a | grep wurstmeister | awk -F " " '{print $1}' | xargs docker rm
+
+#get into bash
+docker exec -it kafka /bin/bash
+
+#create
+/opt/kafka_2.13-2.6.0 # bin/kafka-topics.sh --zookeeper 192.168.1.13:2181 --create --topic dalianpai --partitions 1 --replication-factor 1
+
+#list
+/opt/kafka_2.13-2.6.0 # bin/kafka-topics.sh --zookeeper 192.168.1.13:2181 --list
+
+#delete
+./bin/kafka-topics.sh  --delete --zookeeper 192.168.1.13:2181 --topic sun
+
+#consumer
+./bin/kafka-console-consumer.sh --bootstrap-server 192.168.1.13:9092 --topic sun --from-beginning
+
+#producer
+./bin/kafka-console-producer.sh --broker-list 192.168.1.13:9092 --topic sun
+
+
