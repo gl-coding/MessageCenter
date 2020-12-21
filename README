@@ -40,20 +40,27 @@ docker ps -a | grep wurstmeister | awk -F " " '{print $1}' | xargs docker rm
 
 #get into bash
 docker exec -it kafka /bin/bash
+cd /opt/kafka_2.13-2.6.0
 
 #create
-/opt/kafka_2.13-2.6.0 # bin/kafka-topics.sh --zookeeper 192.168.1.13:2181 --create --topic dalianpai --partitions 1 --replication-factor 1
+bin/kafka-topics.sh --zookeeper 192.168.1.13:2181 --create --topic sun --partitions 1 --replication-factor 1
 
 #list
-/opt/kafka_2.13-2.6.0 # bin/kafka-topics.sh --zookeeper 192.168.1.13:2181 --list
+bin/kafka-topics.sh --zookeeper 192.168.1.13:2181 --list
+
+#desc
+bin/kafka-topics.sh --describe --zookeeper 192.168.1.3:2181 --topic sun
 
 #delete
-./bin/kafka-topics.sh  --delete --zookeeper 192.168.1.13:2181 --topic sun
+bin/kafka-topics.sh  --delete --zookeeper 192.168.1.13:2181 --topic sun
 
 #consumer
-./bin/kafka-console-consumer.sh --bootstrap-server 192.168.1.13:9092 --topic sun --from-beginning
+bin/kafka-console-consumer.sh --bootstrap-server 192.168.1.13:9092 --topic sun --from-beginning
 
 #producer
-./bin/kafka-console-producer.sh --broker-list 192.168.1.13:9092 --topic sun
+bin/kafka-console-producer.sh --broker-list 192.168.1.13:9092 --topic sun
+
+
+
 
 
